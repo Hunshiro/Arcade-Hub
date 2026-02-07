@@ -1,0 +1,8 @@
+{
+  "name": "ArcadeHub: Game Hosting & Tournaments",
+  "description": "A platform to upload HTML5 games, host competitive gaming events, and compete on global leaderboards. Features an AI-powered game generator and real-time score tracking.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
