@@ -1,4 +1,4 @@
-
+﻿
 import React from 'react';
 import { Game } from '../types';
 
@@ -93,3 +93,4 @@ const Dashboard: React.FC<DashboardProps> = ({ games, onPlay }) => {
 };
 
 export default Dashboard;
+

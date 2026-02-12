@@ -1,10 +1,11 @@
-
+﻿
 import React, { useState, useEffect, useRef } from 'react';
-import { generateSimpleGame } from '../services/geminiService';
 import { Game } from '../types';
+import { generateGame } from '../services/api';
 
 interface AIStudioProps {
-  onGameGenerated: (game: Game) => void;
+  token: string | null;
+  onGameGenerated: (game: Game, roomCode?: string) => void;
 }
 
 const LOADING_STEPS = [
@@ -17,23 +18,30 @@ const LOADING_STEPS = [
   "Finalizing Render Pipeline..."
 ];
 
-const AIStudio: React.FC<AIStudioProps> = ({ onGameGenerated }) => {
+const AIStudio: React.FC<AIStudioProps> = ({ onGameGenerated, token }) => {
   const [prompt, setPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
+  const [mode, setMode] = useState<'solo' | 'two-player'>('solo');
+  const [roomCode, setRoomCode] = useState<string | null>(null);
   
   const progressTimerRef = useRef<number | null>(null);
   const stepTimerRef = useRef<number | null>(null);
 
   const handleGenerate = async () => {
     if (!prompt) return;
+    if (!token) {
+      setError('Please log in to generate a game.');
+      return;
+    }
     
     setIsGenerating(true);
     setError(null);
     setProgress(0);
     setCurrentStep(0);
+    setRoomCode(null);
 
     // Simulated progress bar logic
     progressTimerRef.current = window.setInterval(() => {
@@ -50,7 +58,7 @@ const AIStudio: React.FC<AIStudioProps> = ({ onGameGenerated }) => {
     }, 2000);
 
     try {
-      const result = await generateSimpleGame(prompt);
+      const result = await generateGame(token, prompt, mode);
       
       // Complete the progress instantly when data arrives
       setProgress(100);
@@ -58,19 +66,21 @@ const AIStudio: React.FC<AIStudioProps> = ({ onGameGenerated }) => {
       window.clearInterval(stepTimerRef.current!);
 
       const newGame: Game = {
-        id: Math.random().toString(36).substr(2, 9),
-        title: result.title,
-        description: result.description,
-        category: 'AI Generated',
-        htmlContent: result.htmlContent,
-        author: 'Gemini AI',
-        thumbnail: `https://picsum.photos/seed/${result.title}/400/300`,
-        createdAt: Date.now()
+        id: result.game.id,
+        title: result.game.title,
+        description: result.game.description,
+        category: result.game.category || 'AI Generated',
+        htmlContent: result.game.htmlContent,
+        author: result.game.author || 'Gemini AI',
+        thumbnail: `https://picsum.photos/seed/${result.game.title}/400/300`,
+        createdAt: result.game.createdAt || Date.now(),
+        mode: result.game.mode || mode
       };
       
       // Small delay for visual satisfaction of reaching 100%
       setTimeout(() => {
-        onGameGenerated(newGame);
+        setRoomCode(result.roomCode || null);
+        onGameGenerated(newGame, result.roomCode || undefined);
         setPrompt('');
         setIsGenerating(false);
         setProgress(0);
@@ -101,11 +111,26 @@ const AIStudio: React.FC<AIStudioProps> = ({ onGameGenerated }) => {
 
         {!isGenerating ? (
           <div className="relative z-10 transition-all duration-500">
-            <div className="inline-block p-5 rounded-3xl bg-indigo-500/20 mb-8 text-5xl border border-indigo-500/30 shadow-inner">✨</div>
+            <div className="inline-block p-5 rounded-3xl bg-indigo-500/20 mb-8 text-5xl border border-indigo-500/30 shadow-inner">âœ¨</div>
             <h2 className="text-5xl md:text-6xl font-black mb-6 tracking-tight leading-tight">AI Game Studio</h2>
             <p className="text-xl text-indigo-100/60 mb-12 max-w-2xl mx-auto leading-relaxed">
               Describe your idea. Gemini will build the physics, logic, and graphics instantly.
             </p>
+
+            <div className="flex flex-col md:flex-row items-center justify-center gap-4 mb-6">
+              <button
+                onClick={() => setMode('solo')}
+                className={`px-6 py-2 rounded-full text-sm font-black border transition-all ${mode === 'solo' ? 'bg-indigo-600 border-indigo-500 text-white' : 'bg-slate-900/60 border-slate-700 text-slate-300 hover:border-indigo-500/40'}`}
+              >
+                Solo Play
+              </button>
+              <button
+                onClick={() => setMode('two-player')}
+                className={`px-6 py-2 rounded-full text-sm font-black border transition-all ${mode === 'two-player' ? 'bg-indigo-600 border-indigo-500 text-white' : 'bg-slate-900/60 border-slate-700 text-slate-300 hover:border-indigo-500/40'}`}
+              >
+                Two Player Room
+              </button>
+            </div>
 
             <div className="relative group max-w-2xl mx-auto">
               <input 
@@ -124,6 +149,11 @@ const AIStudio: React.FC<AIStudioProps> = ({ onGameGenerated }) => {
               </button>
             </div>
             {error && <p className="mt-6 text-red-400 font-bold bg-red-400/10 py-2 px-4 rounded-full inline-block">{error}</p>}
+            {roomCode && (
+              <div className="mt-6 text-indigo-200 font-black bg-indigo-500/10 py-3 px-6 rounded-full inline-block">
+                Room Created: <span className="text-white">{roomCode}</span>
+              </div>
+            )}
           </div>
         ) : (
           <div className="relative z-10 space-y-12 py-10 transition-all duration-500">
@@ -199,3 +229,4 @@ const AIStudio: React.FC<AIStudioProps> = ({ onGameGenerated }) => {
 };
 
 export default AIStudio;
+

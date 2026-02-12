@@ -8,6 +8,7 @@ export interface Game {
   htmlContent: string;
   category: string;
   createdAt: number;
+  mode?: 'solo' | 'two-player';
 }
 
 export interface GameEvent {
@@ -30,6 +31,7 @@ export interface LeaderboardEntry {
 }
 
 export interface User {
+  id?: string;
   username: string;
   avatar: string;
 }

@@ -1,4 +1,4 @@
-
+﻿
 import React from 'react';
 import { LeaderboardEntry, Game } from '../types';
 
@@ -25,7 +25,7 @@ const LeaderboardView: React.FC<LeaderboardViewProps> = ({ leaderboard, games })
               idx === 0 ? 'bg-indigo-900/40 border-indigo-500 scale-105 shadow-indigo-500/20 shadow-2xl' : 'bg-slate-900 border-slate-800'
             }`}>
               <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-slate-900 border-4 border-slate-800 flex items-center justify-center text-2xl">
-                {idx === 0 ? '👑' : idx === 1 ? '🥈' : '🥉'}
+                {idx === 0 ? 'ðŸ‘‘' : idx === 1 ? 'ðŸ¥ˆ' : 'ðŸ¥‰'}
               </div>
               <div className="w-20 h-20 rounded-full mx-auto mb-4 bg-slate-800 overflow-hidden border-4 border-slate-700">
                 <img src={`https://picsum.photos/seed/${entry.username}/100/100`} alt="user" />
@@ -86,3 +86,4 @@ const LeaderboardView: React.FC<LeaderboardViewProps> = ({ leaderboard, games })
 };
 
 export default LeaderboardView;
+

@@ -1,4 +1,4 @@
-
+﻿
 import React from 'react';
 
 interface SidebarProps {
@@ -8,10 +8,10 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
   const menuItems = [
-    { id: 'games', label: 'Arcade', icon: '🎮' },
-    { id: 'events', label: 'Tournaments', icon: '🏆' },
-    { id: 'leaderboard', label: 'Leaderboard', icon: '📈' },
-    { id: 'ai-studio', label: 'AI Studio', icon: '✨' },
+    { id: 'games', label: 'Arcade', icon: 'ðŸŽ®' },
+    { id: 'events', label: 'Tournaments', icon: 'ðŸ†' },
+    { id: 'leaderboard', label: 'Leaderboard', icon: 'ðŸ“ˆ' },
+    { id: 'ai-studio', label: 'AI Studio', icon: 'âœ¨' },
   ];
 
   return (
@@ -53,3 +53,4 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
 };
 
 export default Sidebar;
+

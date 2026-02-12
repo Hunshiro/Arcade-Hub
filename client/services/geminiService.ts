@@ -1,12 +1,17 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
 
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+if (!apiKey) {
+  throw new Error("Missing VITE_GEMINI_API_KEY. Add it to .env and restart the dev server.");
+}
+
 // Initialize the Gemini API client using the API key from environment variables.
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+const ai = new GoogleGenAI({ apiKey });
 
 export const generateSimpleGame = async (prompt: string): Promise<{ htmlContent: string, title: string, description: string }> => {
   const response = await ai.models.generateContent({
-    model: 'gemini-3-pro-preview',
+    model: 'gemini-2.5-flash',
     contents: `Create a single-file, production-ready HTML5 arcade game based on this idea: "${prompt}". 
 
     STRICT REQUIREMENTS:

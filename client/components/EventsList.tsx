@@ -1,4 +1,4 @@
-
+﻿
 import React from 'react';
 import { GameEvent, Game } from '../types';
 
@@ -81,3 +81,4 @@ const EventsList: React.FC<EventsListProps> = ({ events, games, onPlayGame }) =>
 };
 
 export default EventsList;
+

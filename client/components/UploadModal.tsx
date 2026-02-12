@@ -1,4 +1,4 @@
-
+﻿
 import React, { useState } from 'react';
 import { Game } from '../types';
 import { curateGameDescription } from '../services/geminiService';
@@ -164,3 +164,4 @@ const UploadModal: React.FC<UploadModalProps> = ({ onClose, onUpload }) => {
 };
 
 export default UploadModal;
+
